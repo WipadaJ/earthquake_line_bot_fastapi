@@ -2,8 +2,8 @@ import os
 from linebot import LineBotApi, WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
-line_bot_api = LineBotApi(os.getenv(LINE_CHANNEL_ACCESS_TOKEN))
-handler = WebhookHandler(os.getenv(LINE_CHANNEL_SECRET))
+line_bot_api = LineBotApi(os.getenv("LINE_CHANNEL_ACCESS_TOKEN"))
+handler = WebhookHandler(os.getenv("LINE_CHANNEL_SECRET"))
 
 def handle_line_webhook(body, signature):
     from fastapi.responses import Response
