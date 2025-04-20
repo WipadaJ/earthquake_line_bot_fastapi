@@ -7,4 +7,5 @@ app = FastAPI()
 async def callback(request: Request):
     body = await request.body()
     signature = request.headers.get('X-Line-Signature')
+    print("📩 ได้รับ webhook แล้ว:", body.decode())
     return handle_line_webhook(body, signature)
