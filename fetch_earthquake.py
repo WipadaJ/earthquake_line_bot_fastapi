@@ -5,8 +5,12 @@ def fetch_earthquake_data():
     response = requests.get(url)
     data = response.json()
 
+    info_list = []
+
     for quake in data['features']:
         place = quake['properties']['place']
         mag = quake['properties']['mag']
         time = quake['properties']['time']
         print(f"แผ่นดินไหว {mag} ที่ {place}")
+
+    return "\n".join(info_list[:5]) 

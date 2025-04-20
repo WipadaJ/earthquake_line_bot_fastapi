@@ -1,6 +1,7 @@
 import os
 from linebot import LineBotApi, WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from fetch_earthquake import fetch_earthquake_data
 
 line_bot_api = LineBotApi(os.getenv("LINE_CHANNEL_ACCESS_TOKEN"))
 handler = WebhookHandler(os.getenv("LINE_CHANNEL_SECRET"))
@@ -19,7 +20,13 @@ def handle_message(event):
     user_id = event.source.user_id
     text = event.message.text.strip()
     
-    if text == "สมัคร":
+    if text == "แผ่นดินไหวล่าสุด":
+        quake_info = fetch_earthquake_data()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=quake_info)
+        )
+    elif text == "สมัคร":
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text="คุณได้สมัครรับแจ้งเตือนแผ่นดินไหวเรียบร้อยแล้ว!")
