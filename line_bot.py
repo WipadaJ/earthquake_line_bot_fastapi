@@ -9,8 +9,9 @@ def handle_line_webhook(body, signature):
     from fastapi.responses import Response
     try:
         handler.handle(body.decode(), signature)
+        print("✅ Handler ได้รับ event แล้ว")
     except Exception as e:
-        print("Error:", e)
+        print("❌ ERROR ใน handler.handle():", e)
     return Response(content="OK", status_code=200)
 
 @handler.add(MessageEvent, message=TextMessage)
