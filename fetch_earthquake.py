@@ -15,7 +15,9 @@ def fetch_earthquake_data():
     for quake in features:
         place = quake['properties']['place']
         mag = quake['properties']['mag']
-        info_list.append(f"แผ่นดินไหว {mag} ที่ {place}")
+
+        if mag >= 1.8:
+            info_list.append(f"แผ่นดินไหว {mag} ที่ {place}")
 
     # ตรวจดูว่ารายการถูกต้อง
     print("📝 รายการที่จัดเตรียมส่ง:", repr(info_list))
