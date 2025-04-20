@@ -1,21 +1,23 @@
 import requests
 
 def fetch_earthquake_data():
-    try:
-        url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson"
-        response = requests.get(url)
-        data = response.json()
+    url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson"
+    response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
+    data = response.json()
 
-        info_list = []
+    features = data.get("features", [])
+    print("📦 ดึงข้อมูลได้:", len(features), "รายการ")
 
-        for quake in data['features']:
-            place = quake['properties']['place']
-            mag = quake['properties']['mag']
-            time = quake['properties']['time']
-            print(f"แผ่นดินไหว {mag} ที่ {place}")
-
-        return "\n".join(info_list[:5]) 
-
-    except Exception as e:
-        print("❌ fetch error:", e)
+    if not features:
         return None
+
+    info_list = []
+    for quake in features:
+        place = quake['properties']['place']
+        mag = quake['properties']['mag']
+        info_list.append(f"แผ่นดินไหว {mag} ที่ {place}")
+
+    # ตรวจดูว่ารายการถูกต้อง
+    print("📝 รายการที่จัดเตรียมส่ง:", repr(info_list))
+
+    return "\n".join(info_list[:5])
