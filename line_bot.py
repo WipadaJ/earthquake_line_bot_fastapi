@@ -21,11 +21,11 @@ def handle_message(event):
     text = event.message.text.strip()
     
     if text == "แผ่นดินไหวล่าสุด":
-        quake_info = fetch_earthquake_data()
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=quake_info)
-        )
+        info = fetch_earthquake_data()
+        if info:
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=info))
+        else:
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text="ขณะนี้ยังไม่มีรายงานแผ่นดินไหวล่าสุดค่ะ"))
     elif text == "สมัคร":
         line_bot_api.reply_message(
             event.reply_token,
