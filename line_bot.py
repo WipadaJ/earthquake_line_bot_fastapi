@@ -4,7 +4,7 @@ from linebot.models import MessageEvent, TextMessage, TextSendMessage
 from fetch_earthquake import fetch_earthquake_data
 
 line_bot_api = LineBotApi(os.getenv("LINE_CHANNEL_ACCESS_TOKEN"))
-#handler = WebhookHandler(os.getenv("LINE_CHANNEL_SECRET"))
+handler = WebhookHandler(os.getenv("LINE_CHANNEL_SECRET"))
 def get_subscribers():
     try:
         with open("subscribers.txt", "r") as f:
