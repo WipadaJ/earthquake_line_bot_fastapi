@@ -84,3 +84,8 @@ def handle_message(event):
                 event.reply_token,
                 TextSendMessage(text="คุณได้สมัครรับแจ้งเตือนแผ่นดินไหวเรียบร้อยแล้ว!")
             )
+    elif text == "รำคาน" or text == "รำคาญ":
+        line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="ขออภัยค่ะ ดิฉันเพียงแค่ทำตามหน้าที่เท่านั้น")
+            )
