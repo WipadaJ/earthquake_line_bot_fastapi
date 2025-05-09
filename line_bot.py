@@ -25,14 +25,14 @@ def push_earthquake_alert():
         except Exception as e:
             print("❌ ส่งไม่สำเร็จ:", e)
             
- def handle_line_webhook(body, signature):
-     from fastapi.responses import Response
-     try:
-         handler.handle(body.decode(), signature)
-         print("✅ Handler ได้รับ event แล้ว")
-     except Exception as e:
-         print("❌ ERROR ใน handler.handle():", e)
-     return Response(content="OK", status_code=200)
+def handle_line_webhook(body, signature):
+    from fastapi.responses import Response
+    try:
+        handler.handle(body.decode(), signature)
+        print("✅ Handler ได้รับ event แล้ว")
+    except Exception as e:
+        print("❌ ERROR ใน handler.handle():", e)
+    return Response(content="OK", status_code=200)
 
 if __name__ == "__main__":
     push_earthquake_alert()
