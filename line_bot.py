@@ -5,6 +5,17 @@ from fetch_earthquake import fetch_earthquake_data
 
 line_bot_api = LineBotApi(os.getenv("LINE_CHANNEL_ACCESS_TOKEN"))
 handler = WebhookHandler(os.getenv("LINE_CHANNEL_SECRET"))
+
+def is_subscribed(user_id: str, filename="subscribers.txt") -> bool:
+    try:
+        with open(filename, "r") as f:
+            for line in f:
+                if line.strip() == user_id:
+                    return True
+        return False
+    except FileNotFoundError:
+        return False
+
 def get_subscribers():
     try:
         with open("subscribers.txt", "r") as f:
@@ -34,44 +45,51 @@ def handle_line_webhook(body, signature):
         print("❌ ERROR ใน handler.handle():", e)
     return Response(content="OK", status_code=200)
 
-if __name__ == "__main__":
-    push_earthquake_alert()
+#if __name__ == "__main__":
+#    push_earthquake_alert()
 
-# def handle_line_webhook(body, signature):
-#     from fastapi.responses import Response
-#     try:
-#         handler.handle(body.decode(), signature)
-#         print("✅ Handler ได้รับ event แล้ว")
-#     except Exception as e:
-#         print("❌ ERROR ใน handler.handle():", e)
-#     return Response(content="OK", status_code=200)
+def handle_line_webhook(body, signature):
+    from fastapi.responses import Response
+    try:
+        handler.handle(body.decode(), signature)
+        print("✅ Handler ได้รับ event แล้ว")
+    except Exception as e:
+        print("❌ ERROR ใน handler.handle():", e)
+    return Response(content="OK", status_code=200)
 
-# @handler.add(MessageEvent, message=TextMessage)
-# def handle_message(event):
-#     user_id = event.source.user_id
-#     text = event.message.text.strip()
+@handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
+    user_id = event.source.user_id
+    text = event.message.text.strip()
     
-#     if text == "แผ่นดินไหวล่าสุด":
-#         info = fetch_earthquake_data()
-#         print("🔎 DEBUG info = ", repr(info))  # สำคัญมาก
+    if text == "แผ่นดินไหวล่าสุด":
+        info = fetch_earthquake_data()
+        print("🔎 DEBUG info = ", repr(info))  # สำคัญมาก
 
-#         if info and info.strip():
-#             line_bot_api.reply_message(
-#                 event.reply_token,
-#                 TextSendMessage(text=info)
-#             )
-#         else:
-#             line_bot_api.reply_message(
-#                 event.reply_token,
-#                 TextSendMessage(text="ขณะนี้ยังไม่มีรายงานแผ่นดินไหวในทวีปเอเชียที่มีความแรงเกิน 1.0 ค่ะ")
-#             )
+        if info and info.strip():
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text=info)
+            )
+        else:
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="ขณะนี้ยังไม่มีรายงานแผ่นดินไหวในทวีปเอเชียที่มีความแรงเกิน 1.0 ค่ะ")
+            )
 
-#     elif text == "สมัคร":
-#         user_id = event.source.user_id
-#         with open("subscribers.txt", "a") as f:
-#             f.write(user_id + "\n")
-
-#         line_bot_api.reply_message(
-#             event.reply_token,
-#             TextSendMessage(text="คุณได้สมัครรับแจ้งเตือนแผ่นดินไหวเรียบร้อยแล้ว!")
-#         )
+    elif text == "สมัคร":
+        user_id = event.source.user_id
+        if is_subscribed(user_id):
+            print("✅ มี user_id นี้อยู่ในไฟล์แล้ว")
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="คุณเคยสมัครรับแจ้งเตือนแผ่นดินไหวแล้ว")
+            )
+        else:
+            print("❌ ยังไม่มี user_id นี้")
+            with open("subscribers.txt", "a") as f:
+                f.write(user_id + "\n")
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="คุณได้สมัครรับแจ้งเตือนแผ่นดินไหวเรียบร้อยแล้ว!")
+            )
