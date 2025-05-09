@@ -78,7 +78,7 @@ def handle_message(event):
             )
         else:
             print("❌ ยังไม่มี user_id นี้")
-            with open("subscribers.txt", "w") as f:
+            with open("subscribers.txt", "a") as f:
                 f.write(user_id + "\n")
             line_bot_api.reply_message(
                 event.reply_token,
