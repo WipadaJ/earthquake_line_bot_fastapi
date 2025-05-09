@@ -29,11 +29,16 @@ async def callback(request: Request):
 
 # 🔧 โหลดรายชื่อผู้สมัครรับแจ้งเตือน
 def get_subscribers():
-    try:
-        with open("subscribers.txt", "r") as f:
-            return list(set(line.strip() for line in f))
-    except FileNotFoundError:
-        return []
+    filename = "subscribers.txt"
+    default_user = os.getenv("DEFAULT_USER_ID") or "U066bed9e80abfb1930bbca1512ec4b55"
+    if not os.path.exists(filename):
+        with open(filename, "w") as f:
+            ๒pass  # สร้างไฟล์เปล่า
+            f.write(default_user + "\n")
+        print(f"📄 สร้าง {filename} พร้อม user id เริ่มต้นแล้ว")
+
+    with open(filename, "r") as f:
+        return list(set(line.strip() for line in f if line.strip()))
 
 # ✅ Manual push message (เช่นเรียกจากเบราว์เซอร์หรือ scheduler)
 @app.get("/notify")
