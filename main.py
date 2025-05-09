@@ -37,6 +37,8 @@ def manual_notify_all():
     subscribers = get_subscribers()
     success = 0
 
+    #for test push message
+    message = "Push massage in the testing....."
     for user_id in subscribers:
         try:
             line_bot_api.push_message(user_id, TextSendMessage(text=message))
