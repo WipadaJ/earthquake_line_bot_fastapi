@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import Response
-from linebot import LineBotApi, WebhookHandler
+from linebot import LineBotApi, WebhookHandler,get_subscribers
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 import os
 
@@ -26,19 +26,6 @@ async def callback(request: Request):
         print("❌ ERROR ใน handler.handle():", e)
 
     return Response(content="OK", status_code=200)
-
-# 🔧 โหลดรายชื่อผู้สมัครรับแจ้งเตือน
-def get_subscribers():
-    filename = "subscribers.txt"
-    default_user = os.getenv("DEFAULT_USER_ID") or "U066bed9e80abfb1930bbca1512ec4b55"
-    if not os.path.exists(filename):
-        with open(filename, "w") as f:
-            #pass  # สร้างไฟล์เปล่า
-            f.write(default_user + "\n")
-        print(f"📄 สร้าง {filename} พร้อม user id เริ่มต้นแล้ว")
-
-    with open(filename, "r") as f:
-        return list(set(line.strip() for line in f if line.strip()))
 
 # ✅ Manual push message (เช่นเรียกจากเบราว์เซอร์หรือ scheduler)
 @app.get("/notify")
