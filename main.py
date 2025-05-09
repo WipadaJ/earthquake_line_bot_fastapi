@@ -33,7 +33,7 @@ def get_subscribers():
     default_user = os.getenv("DEFAULT_USER_ID") or "U066bed9e80abfb1930bbca1512ec4b55"
     if not os.path.exists(filename):
         with open(filename, "w") as f:
-            ๒pass  # สร้างไฟล์เปล่า
+            #pass  # สร้างไฟล์เปล่า
             f.write(default_user + "\n")
         print(f"📄 สร้าง {filename} พร้อม user id เริ่มต้นแล้ว")
 
