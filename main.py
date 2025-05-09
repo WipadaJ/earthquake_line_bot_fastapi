@@ -1,11 +1,11 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import Response
-from linebot import LineBotApi, WebhookHandler,get_subscribers
+from linebot import LineBotApi, WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 import os
 
 from fetch_earthquake import fetch_earthquake_data  # หรือใช้ fetch_earthquake_asia
-from line_bot import handler  # ใช้ handler เดิมจาก line_bot.py
+from line_bot import handler,get_subscribers
 
 app = FastAPI()
 
