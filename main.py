@@ -37,11 +37,9 @@ def manual_notify_all():
     subscribers = get_subscribers()
     success = 0
 
-    #for test push message
-    message = "Push massage in the testing....."
     print(f"This here is before read a file subscribers")
     for user_id in subscribers:
-        print(f"✅ There are user_id")
+        #print(f"✅ There are user_id")
         try:
             line_bot_api.push_message(user_id, TextSendMessage(text=message))
             success += 1
