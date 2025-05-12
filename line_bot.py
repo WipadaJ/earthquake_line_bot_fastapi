@@ -2,9 +2,11 @@ import os
 from linebot import LineBotApi, WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 from fetch_earthquake import fetch_earthquake_data
+from config import settings
+from db_connect import is_subscribed_pg, new_user_pg, terminate_user_pg
 
-line_bot_api = LineBotApi(os.getenv("LINE_CHANNEL_ACCESS_TOKEN"))
-handler = WebhookHandler(os.getenv("LINE_CHANNEL_SECRET"))
+line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
+handler = WebhookHandler(settings.LINE_CHANNEL_SECRET)
 
 def is_subscribed(user_id: str, filename="subscribers.txt") -> bool:
     try:
@@ -69,21 +71,25 @@ def handle_message(event):
             )
 
     elif text == "สมัคร":
-        user_id = event.source.user_id
-        if is_subscribed(user_id):
-            print("✅ มี user_id นี้อยู่ในไฟล์แล้ว")
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="คุณเคยสมัครรับแจ้งเตือนแผ่นดินไหวแล้ว")
-            )
+        if is_subscribed_pg(user_id):
+            reply = "คุณเคยสมัครรับแจ้งเตือนแผ่นดินไหวแล้ว"
         else:
-            print("❌ ยังไม่มี user_id นี้")
-            with open("subscribers.txt", "a") as f:
-                f.write(user_id + "\n")
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="คุณได้สมัครรับแจ้งเตือนแผ่นดินไหวเรียบร้อยแล้ว!")
-            )
+            new_user_pg(user_id)
+            reply = "คุณได้สมัครรับแจ้งเตือนแผ่นดินไหวเรียบร้อยแล้ว!"
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=reply)
+        )
+    elif text == "ยกเลิก":
+        if is_subscribed_pg(user_id):
+            terminate_user_pg(user_id)
+            reply = "คุณได้ ยกเลิก รับแจ้งเตือนแผ่นดินไหวเรียบร้อยแล้ว!"
+        else:
+            reply = "คุณยังไม่ได้ สมัคร รับแจ้งเตือนแผ่นดินไหว"
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=reply)
+        )
     elif text == "รำคาน" or text == "รำคาญ":
         line_bot_api.reply_message(
                 event.reply_token,

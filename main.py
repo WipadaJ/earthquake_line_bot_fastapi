@@ -3,13 +3,14 @@ from fastapi.responses import Response
 from linebot import LineBotApi, WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 import os
+from config import settings
 
 from fetch_earthquake import fetch_earthquake_data  # หรือใช้ fetch_earthquake_asia
 from line_bot import handler,get_subscribers
 
 app = FastAPI()
 
-line_bot_api = LineBotApi(os.getenv("LINE_CHANNEL_ACCESS_TOKEN"))
+line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 
 # ✅ Webhook สำหรับ LINE
 @app.post("/callback")
