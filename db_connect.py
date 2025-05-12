@@ -4,24 +4,27 @@ import os
 from datetime import date
 from config import settings
 
+def get_connection():
+    return psycopg2.connect(
+        host=settings.DB_HOST,
+        port=settings.DB_PORT,
+        dbname=settings.DB_NAME,
+        user=settings.USER_DB_NAME,
+        password=settings.DB_PASS
+    )
+
 def check_db_connection():
     try:
-        conn = psycopg2.connect(
-            host=settings.DB_HOST,
-            port=settings.DB_PORT,
-            dbname=settings.DB_NAME,
-            user=settings.USER_DB_NAME,
-            password=settings.DB_PASS
-        )
+        conn = get_connection()
         conn.close()
-        print("✅ Database connected successfully")
+        print("✅ DB connected")
         return True
-    except OperationalError as e:
-        print("❌ Database connection failed:", e)
+    except Exception as e:
+        print("❌ DB failed:", e)
         return False
 
 def is_subscribed_pg(user_id: str) -> bool:
-    conn = check_db_connection()
+    conn = get_connection()
     with conn.cursor() as cur:
         cur.execute("SELECT 1 FROM users_all WHERE user_id = %s", (user_id,))
         result = cur.fetchone()
@@ -29,7 +32,7 @@ def is_subscribed_pg(user_id: str) -> bool:
     return result is not None
 
 def new_user_pg(user_id: str):
-    conn = check_db_connection()
+    conn = get_connection()
     with conn.cursor() as cur:
         try:
             cur.execute("""
@@ -47,7 +50,7 @@ def new_user_pg(user_id: str):
     conn.close()
 
 def terminate_user_pg(user_id: str):
-    conn = check_db_connection()
+    conn = get_connection()
     with conn.cursor() as cur:
         try:
             cur.execute("""

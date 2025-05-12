@@ -3,7 +3,7 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 from fetch_earthquake import fetch_earthquake_data
 from config import settings
-from db_connect import is_subscribed_pg, new_user_pg, terminate_user_pg
+from db_connect import is_subscribed_pg, new_user_pg, terminate_user_pg, check_db_connection
 
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(settings.LINE_CHANNEL_SECRET)
