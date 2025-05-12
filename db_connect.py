@@ -23,7 +23,7 @@ def check_db_connection():
 def is_subscribed_pg(user_id: str) -> bool:
     conn = check_db_connection()
     with conn.cursor() as cur:
-        cur.execute("SELECT 1 FROM eq.users_all WHERE user_id = %s", (user_id,))
+        cur.execute("SELECT 1 FROM users_all WHERE user_id = %s", (user_id,))
         result = cur.fetchone()
     conn.close()
     return result is not None
@@ -33,7 +33,7 @@ def new_user_pg(user_id: str):
     with conn.cursor() as cur:
         try:
             cur.execute("""
-                INSERT INTO eq.users_all (user_id, status, update_dtm)
+                INSERT INTO users_all (user_id, status, update_dtm)
                 VALUES (%s, %s, %s)
                 ON CONFLICT (user_id)
                 DO UPDATE SET
@@ -51,7 +51,7 @@ def terminate_user_pg(user_id: str):
     with conn.cursor() as cur:
         try:
             cur.execute("""
-                UPDATE eq.users_all
+                UPDATE users_all
                 SET status = %s,
                     update_dtm = CURRENT_DATE
                 WHERE user_id = %s
