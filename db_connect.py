@@ -7,8 +7,8 @@ from config import settings
 def check_db_connection():
     try:
         conn = psycopg2.connect(
-            host="localhost",
-            port=5432,
+            host=settings.DB_HOST,
+            port=settings.DB_PORT,
             dbname=settings.DB_NAME,
             user=settings.USER_DB_NAME,
             password=settings.DB_PASS
