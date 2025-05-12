@@ -1,5 +1,7 @@
 fastapi
 uvicorn
+requests
+line-bot-sdk
 python-dotenv
 psycopg2-binary
-line-bot-sdk
+pydantic-settings
