@@ -6,6 +6,8 @@ import os
 load_dotenv()
 
 class Settings(BaseSettings):
+    DB_HOST: str
+    DB_PORT: str
     DB_NAME: str
     USER_DB_NAME: str
     DB_PASS: str
