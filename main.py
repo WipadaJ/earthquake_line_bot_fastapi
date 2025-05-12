@@ -3,13 +3,18 @@ from fastapi.responses import Response
 from linebot import LineBotApi, WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 import os
+from config import settings
 
 from fetch_earthquake import fetch_earthquake_data  # หรือใช้ fetch_earthquake_asia
 from line_bot import handler,get_subscribers
 
 app = FastAPI()
 
-line_bot_api = LineBotApi(os.getenv("LINE_CHANNEL_ACCESS_TOKEN"))
+try:
+    line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
+except Exception as e:
+    print("❌ ไม่สามารถโหลด LINE access token:", e)
+    raise
 
 # ✅ Webhook สำหรับ LINE
 @app.post("/callback")
