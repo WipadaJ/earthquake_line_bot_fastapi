@@ -47,7 +47,7 @@ def handle_line_webhook(body, signature):
         handler.handle(body.decode(), signature)
         print("✅ Handler ได้รับ event แล้ว")
     except Exception as e:
-        print("❌ ERROR ใน handler.handle():", e)
+        print("❌ ERROR ใน handler.handle() line_bot :", e)
     return Response(content="OK", status_code=200)
 
 @handler.add(MessageEvent, message=TextMessage)

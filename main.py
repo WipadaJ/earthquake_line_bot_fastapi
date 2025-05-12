@@ -28,7 +28,7 @@ async def callback(request: Request):
         handler.handle(body.decode(), signature)
         print("✅ Handler ได้รับ event แล้ว")
     except Exception as e:
-        print("❌ ERROR ใน handler.handle():", e)
+        print("❌ ERROR ใน handler.handle() main :", e)
 
     return Response(content="OK", status_code=200)
 
